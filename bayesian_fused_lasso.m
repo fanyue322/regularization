@@ -1,22 +1,9 @@
-% clear
-% clc
-% n=20;
-% p=10;
-% x=normrnd(1,1,p,n);
-% for i=1:n
-%     y(i)=3*x(3,i)+4*x(6,i)+normrnd(0,1);
-% end
-% x=x';
-% y=y';
-
-  
-
 
 function z=bayesian_fused_lasso(x,y,n,p)
 
 
-     burn_in=2000;
-    burn_out=4000;
+burn_in=2000;
+burn_out=4000;
 beta_c=normrnd(0,1,p,1);
 tau2=ones(p,1);
 for i=1:p
