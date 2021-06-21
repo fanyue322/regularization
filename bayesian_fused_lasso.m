@@ -1,9 +1,11 @@
 
+
 function z=bayesian_fused_lasso(x,y,n,p)
+z=starty(0,1,y);
+[n,p]=size(x);
 
-
-burn_in=2000;
-burn_out=4000;
+     burn_in=3000;
+    burn_out=3000;
 beta_c=normrnd(0,1,p,1);
 tau2=ones(p,1);
 for i=1:p
@@ -37,7 +39,7 @@ beta_draw=zeros(burn_in+burn_out,p);
         for i=1:p-1
             sigmab(i,i+1)=-1/ome2(i);
         end
-       mug=inv(x'*x+sigmab)*x'*y;
+       mug=inv(x'*x+sigmab)*x'*z;
 %mug=(x'*x+sigmab)\x'*y;
      
       sigmag=sigma2*inv(x'*x+sigmab);
@@ -93,7 +95,7 @@ ome2(i)=gigrnd(0.5,par1,par2,1);
         
         
         par1=(n+p-1)/2+0.01;
-        par2=0.5*(y-x*beta_c)'*(y-x*beta_c)+0.5*beta_c'*sigmab*beta_c+0.01;
+        par2=0.5*(z-x*beta_c)'*(z-x*beta_c)+0.5*beta_c'*sigmab*beta_c+0.01;
        temp=gamrnd(par1,1/par2);
        sigma2=1/temp;
        
@@ -106,6 +108,11 @@ ome2(i)=gigrnd(0.5,par1,par2,1);
        par2=0.5*sum(ome2)+0.1;
        lambda2=gamrnd(par1,1/par2);
        lambda2=sqrt(lambda2);
+       
+       
+     miu=x*betac;
+    sigmaG=eye(n)*sigma2;
+    z=multruncn(miu,sigmaG,z,y);
 
        beta_draw(iter,:)=beta_c;
     end
