@@ -1,7 +1,7 @@
-function beta_draw=bayesian_pathway_regularization(x,y,L)
+function z=bayesian_pathway_regularization(x,y,L)
 
-burn_in=1000;
-burn_out=2000;
+burn_in=3000;
+burn_out=3000;
 r=1;
 z=starty(0,1,y);
 [n,p]=size(x);
@@ -63,4 +63,4 @@ prA=r*(inv(D)+L{1});
 end  
 
 
-%beta= mean(beta_draw(burn_in+1:burn_in+burn_out,:));
+z= mean(beta_draw(burn_in+1:burn_in+burn_out,:));
