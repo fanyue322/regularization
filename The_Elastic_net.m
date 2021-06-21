@@ -1,16 +1,18 @@
-function beta=The_Elastic_net(x,y,n,p)
+function z=The_Elastic_net(x,y)
 
+z=starty(0,1,y);
+[n,p]=size(x);
 
-
-
+     burn_in=3000;
+    burn_out=3000;
 betac_draw=zeros(6000,p);
 m=zeros(p,1);
 betac=mvnrnd(m,eye(p));
 betac=betac';
 tau2=ones(p,1);
-sigma2=0.1;
+sigma2=1;
 lambda2=1;
-gamma_draw=zeros(6000,p);
+
 gamma=ones(p,1);
 lambda=1;
 %lambda=ones(p,1);
@@ -23,7 +25,7 @@ end
   %  D=diag(tau2);
    sigmag =inv( x'*x + inv(D));
 
-	betac = mvnrnd(sigmag*x'*y,sigma2*sigmag)';
+	betac = mvnrnd(sigmag*x'*z,sigma2*sigmag)';
     
   %  for i=1:p
  
@@ -52,8 +54,8 @@ tau2(i)=gigrnd(0.5,par1,par2,1);
   lambda=temp;
   
   
-  par1=p-size(seq,2)+0.01;
-par2=sum(tau2(seq2))/2+0.01;
+  par1=p+0.01;
+par2=sum(tau2)/2+0.01;
 %par2=size(seq,2)+0.01;
 lambda=gamrnd(par1,1/par2);
  lambda=sqrt(lambda);
@@ -65,18 +67,20 @@ lambda=gamrnd(par1,1/par2);
     D=diag(tau2);
     temp=sum(gamma);
     p_alpha=n/2+(temp)/2+0.01;
-    p_beta=((y-x*betac)'*(y-x*betac)+betac'*inv(D)*betac)/2+0.01;
+    p_beta=((z-x*betac)'*(z-x*betac)+betac'*inv(D)*betac)/2+0.01;
     temp2=gamrnd(p_alpha,1/p_beta);
-    sigma2=1/temp2;
+   % sigma2=1/temp2;
     
-
+          miu=x*betac;
+    sigmaG=eye(n)*sigma2;
+    z=multruncn(miu,sigmaG,z,y);
 
     beta_draw(iter,:)=betac;
 
 end
 
 
-beta=mean(beta_draw(2001:6000,:));
+z=mean(beta_draw(3001:6000,:));
 
 
 
